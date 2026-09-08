@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.WeekFields;
 
 @RestController
 @RequestMapping("/api")
@@ -26,11 +24,11 @@ public class ScheduleController {
     @GetMapping("/schedule")
     public Object getLessons(
             @RequestParam("week") int week,
-            @RequestParam(value = "day", required = false) String day
+            @RequestParam(value = "day", required = false) DayOfWeek day
     ) throws IOException {
 
         if (day == null) {
-            return scheduleService.getSchedule(week);
+            return scheduleService.getWeekSchedule(week);
         }
 
         return scheduleService.getScheduleByWeekday(week, day);
@@ -40,7 +38,7 @@ public class ScheduleController {
     public Object getLessonsToday() throws IOException {
         LocalDate today = LocalDate.now();
         int academicWeek = AcademicWeekCalculator.getAcademicWeek(today);
-        return scheduleService.getScheduleByWeekday(academicWeek, today.getDayOfWeek().toString());
+        return scheduleService.getScheduleByWeekday(academicWeek, today.getDayOfWeek());
     }
 
 }

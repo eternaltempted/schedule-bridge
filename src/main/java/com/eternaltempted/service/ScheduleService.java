@@ -2,8 +2,9 @@ package com.eternaltempted.service;
 
 import com.eternaltempted.model.Lesson;
 import com.eternaltempted.model.Schedule;
-import com.eternaltempted.config.ScheduleProperties;
-import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -11,39 +12,25 @@ import java.time.DayOfWeek;
 import java.util.List;
 
 @Service
+@EnableCaching
 public class ScheduleService {
 
-    private final ScheduleFetcher fetcher;
-    private final ScheduleScraper scraper;
-    private final ScheduleProperties properties;
+    private final Logger log = LoggerFactory.getLogger(ScheduleService.class);
+    private final ScheduleProvider provider;
 
-    public ScheduleService (ScheduleFetcher fetcher,
-                            ScheduleScraper scraper,
-                            ScheduleProperties properties) {
-        this.fetcher = fetcher;
-        this.scraper = scraper;
-        this.properties = properties;
+    public ScheduleService (ScheduleProvider provider) {
+        this.provider = provider;
     }
 
-    public Schedule getSchedule(int week) throws IOException {
-
-        String group = properties.getGroup();
-        String student = properties.getStudent();
-
-        Document doc = fetcher.fetch(
-                group,
-                student,
-                week
-        );
-
-        return scraper.parse(doc);
+    public Schedule getWeekSchedule(int week) throws IOException {
+        log.info("Fetching schedule for week {}", week);
+        return provider.getSchedule(week);
     }
 
     public List<Lesson> getScheduleByWeekday(
             int week,
-            String day) throws IOException{
-        Schedule schedule = getSchedule(week);
-
-        return schedule.getLessonsByWeekday(DayOfWeek.valueOf(day.toUpperCase()));
+            DayOfWeek day) throws IOException {
+        log.info("Fetching schedule for {}", day);
+        return provider.getSchedule(week).getLessonsByWeekday(day);
     }
 }
