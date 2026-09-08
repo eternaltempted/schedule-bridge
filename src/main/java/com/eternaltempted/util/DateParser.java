@@ -2,6 +2,7 @@ package com.eternaltempted.util;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
 public class DateParser {
@@ -13,6 +14,13 @@ public class DateParser {
             );
 
     public static LocalDate parse(String date) {
-        return LocalDate.parse(date, FORMATTER);
+        try {
+            return LocalDate.parse(date, FORMATTER);
+        } catch (DateTimeParseException exception) {
+            throw new IllegalArgumentException(
+                    "Could not parse date, got: " + date,
+                    exception
+            );
+        }
     }
 }

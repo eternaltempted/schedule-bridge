@@ -76,6 +76,18 @@ public class Lesson {
 
     @Override
     public String toString() {
-        return "date=" + date + ", lessonNumber=" + lessonNumber + ", startTime=" + startTime + ", endTime=" + endTime + ", subject=" + subject + ", lessonType=" + lessonType + ", teacher=" + teacher;
+        return """
+           [%s (%s)] #%d: %s (%s)
+           Time: %s - %s | Teacher: %s
+           """.formatted(
+                date,
+                date.getDayOfWeek(),
+                lessonNumber,
+                subject,
+                lessonType,
+                startTime,
+                endTime,
+                teacher
+        );
     }
 }

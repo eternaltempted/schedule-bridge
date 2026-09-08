@@ -3,13 +3,19 @@ package com.eternaltempted.service;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+
 public class ScheduleFetcher {
+
+    private static final Logger log = LoggerFactory.getLogger(ScheduleFetcher.class);
 
     private static final String BASE_URL = "http://rozklad.hneu.edu.ua/schedule/schedule";
     private static final int TIMEOUT_MS = 5000;
+    private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36";
 
     public Document fetch(String group, String student, int week) throws IOException {
 
@@ -31,18 +37,35 @@ public class ScheduleFetcher {
             );
         }
 
+        log.info(
+                "Fetching schedule by the request..."
+        );
+
         try {
-            return Jsoup.connect(BASE_URL)
+            Document doc = Jsoup.connect(BASE_URL)
                     .data("group", group)
                     .data("week", String.valueOf(week))
                     .data("student", student)
                     .timeout(TIMEOUT_MS)
+                    .userAgent(USER_AGENT)
                     .get();
+
+            log.debug("Successfully fetched schedule HTML document.");
+            return doc;
         } catch (HttpStatusException exception) {
+            log.error(
+                    "HTTP error {} while fetching schedule for week={}",
+                    exception.getStatusCode(), week
+            );
             throw new IOException(
                     "Could not fetch data, HTTP status: " + exception.getStatusCode(),
                     exception
             );
+        } catch (IOException exception) {
+            log.error(
+                    "Network failure connecting to the schedule portal."
+            );
+            throw exception;
         }
 
     }
