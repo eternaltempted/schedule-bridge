@@ -1,12 +1,14 @@
-package com.eternaltempted.util;
+package com.eternaltempted.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+@Component
 public class ScheduleProperties {
 
     private static final Logger log = LoggerFactory.getLogger(ScheduleProperties.class);

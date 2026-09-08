@@ -1,40 +1,35 @@
 package com.eternaltempted.model;
 
 import java.time.DayOfWeek;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 
 public class Schedule {
 
-    private final List<Lesson> lessons;
+    private final Map<LocalDate, List<Lesson>> lessons;
 
     public Schedule() {
-        this.lessons = new ArrayList<>();
+        this.lessons = new TreeMap<>(); // guarantees chronological order
     }
 
     public void addLesson(Lesson lesson) {
-        if (lesson == null) {
-            throw new IllegalArgumentException(
-                    "Lesson cannot be null"
-            );
-        }
+        Objects.requireNonNull(lesson, "Lesson cannot be null");
 
-        this.lessons.add(lesson);
+        lessons.computeIfAbsent(lesson.getDate(), date ->
+                new ArrayList<>()
+        ).add(lesson);
     }
 
-    public List<Lesson> getLessons() {
-        return lessons.stream()
-                .sorted(Comparator.comparing(Lesson::getDate)
-                        .thenComparing(Lesson::getStartTime))
-                .toList();
+    public Map<LocalDate, List<Lesson>> getLessons() {
+        return lessons;
     }
 
-    public List<Lesson> getLessonsByDay(DayOfWeek day) {
-        return lessons.stream()
-                .sorted(Comparator.comparing(Lesson::getStartTime))
-                .filter(lesson -> lesson.getDate().getDayOfWeek() == day)
-                .toList();
+    public List<Lesson> getLessonsByWeekday(DayOfWeek day) {
+        return lessons.entrySet()
+                .stream()
+                .filter(lesson -> lesson.getKey().getDayOfWeek() == day)
+                .findFirst()
+                .map(Map.Entry::getValue)
+                .orElse(List.of());
     }
-
 }

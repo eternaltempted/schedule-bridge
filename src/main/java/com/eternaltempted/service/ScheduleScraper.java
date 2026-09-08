@@ -7,6 +7,7 @@ import com.eternaltempted.util.LessonInfoParser;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@Component
 public class ScheduleScraper {
 
     public Schedule parse(Document doc) {

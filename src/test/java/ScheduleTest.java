@@ -44,7 +44,7 @@ public class ScheduleTest {
         schedule.addLesson(maths);
         schedule.addLesson(english);
 
-        assertEquals(List.of(programming, maths), schedule.getLessonsByDay(DayOfWeek.MONDAY));
+        assertEquals(List.of(programming, maths), schedule.getLessonsByWeekday(DayOfWeek.MONDAY));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class ScheduleTest {
         schedule.addLesson(maths);
         schedule.addLesson(english);
 
-        assertEquals(List.of(english), schedule.getLessonsByDay(DayOfWeek.FRIDAY));
+        assertEquals(List.of(english), schedule.getLessonsByWeekday(DayOfWeek.FRIDAY));
     }
 
     @Test
@@ -116,7 +116,7 @@ public class ScheduleTest {
         schedule.addLesson(maths);
         schedule.addLesson(english);
 
-        assertEquals(List.of(), schedule.getLessonsByDay(DayOfWeek.TUESDAY));
+        assertEquals(List.of(), schedule.getLessonsByWeekday(DayOfWeek.TUESDAY));
     }
 
     @Test

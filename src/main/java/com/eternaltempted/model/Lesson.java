@@ -1,8 +1,19 @@
 package com.eternaltempted.model;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@JsonPropertyOrder({
+        "date",
+        "lessonNumber",
+        "startTime",
+        "endTime",
+        "subject",
+        "lessonType",
+        "teacher"
+})
 public class Lesson {
 
     private final LocalDate date;

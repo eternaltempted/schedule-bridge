@@ -5,16 +5,17 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-
+@Component
 public class ScheduleFetcher {
 
     private static final Logger log = LoggerFactory.getLogger(ScheduleFetcher.class);
 
     private static final String BASE_URL = "http://rozklad.hneu.edu.ua/schedule/schedule";
-    private static final int TIMEOUT_MS = 5000;
+    private static final int TIMEOUT_MS = 10_000;
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36";
 
     public Document fetch(String group, String student, int week) throws IOException {

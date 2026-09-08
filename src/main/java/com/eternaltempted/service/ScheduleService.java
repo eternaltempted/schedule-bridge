@@ -1,11 +1,16 @@
 package com.eternaltempted.service;
 
+import com.eternaltempted.model.Lesson;
 import com.eternaltempted.model.Schedule;
-import com.eternaltempted.util.ScheduleProperties;
+import com.eternaltempted.config.ScheduleProperties;
 import org.jsoup.nodes.Document;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.DayOfWeek;
+import java.util.List;
 
+@Service
 public class ScheduleService {
 
     private final ScheduleFetcher fetcher;
@@ -32,5 +37,13 @@ public class ScheduleService {
         );
 
         return scraper.parse(doc);
+    }
+
+    public List<Lesson> getScheduleByWeekday(
+            int week,
+            String day) throws IOException{
+        Schedule schedule = getSchedule(week);
+
+        return schedule.getLessonsByWeekday(DayOfWeek.valueOf(day.toUpperCase()));
     }
 }
