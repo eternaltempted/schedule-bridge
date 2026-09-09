@@ -1,5 +1,6 @@
 package com.eternaltempted.controller;
 
+import com.eternaltempted.model.Lesson;
 import com.eternaltempted.service.ScheduleService;
 import com.eternaltempted.util.AcademicWeekCalculator;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -35,10 +38,17 @@ public class ScheduleController {
     }
 
     @GetMapping("/schedule/today")
-    public Object getLessonsToday() throws IOException {
+    public List<Lesson> getLessonsToday() throws IOException {
         LocalDate today = LocalDate.now();
         int academicWeek = AcademicWeekCalculator.getAcademicWeek(today);
         return scheduleService.getScheduleByWeekday(academicWeek, today.getDayOfWeek());
+    }
+
+    @GetMapping("/schedule/next")
+    public Optional<Lesson> getNextLesson() throws IOException {
+        LocalDate today = LocalDate.now();
+        int academicWeek = AcademicWeekCalculator.getAcademicWeek(today);
+        return scheduleService.getNextLesson(academicWeek);
     }
 
 }

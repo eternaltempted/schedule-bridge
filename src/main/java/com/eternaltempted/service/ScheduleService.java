@@ -9,7 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @EnableCaching
@@ -32,5 +35,12 @@ public class ScheduleService {
             DayOfWeek day) throws IOException {
         log.info("Fetching schedule for {}", day);
         return provider.getSchedule(week).getLessonsByWeekday(day);
+    }
+
+    public Optional<Lesson> getNextLesson(
+            int week
+    ) throws IOException {
+        log.info("Fetching schedule to get the next lesson...");
+        return provider.getSchedule(week).getNextLesson();
     }
 }
