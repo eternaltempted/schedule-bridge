@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Schedule {
 
@@ -44,10 +45,18 @@ public class Schedule {
         LocalDate today = LocalDate.now();
         LocalDateTime now = LocalDateTime.now();
 
-        return lessons.entrySet().stream()
-                .filter(entry -> !entry.getKey().isBefore(today))
-                .flatMap(entry -> entry.getValue().stream())
-                .filter(lesson -> lesson.getDate().atTime(lesson.getStartTime()).isAfter(now))
-                .findFirst();
+        for (Map.Entry<LocalDate, List<Lesson>> entry : lessons.entrySet()) {
+
+            if (!entry.getKey().isBefore(today)) {
+                Optional<Lesson> nextLesson = entry.getValue()
+                        .stream().filter(lesson -> lesson.getDate()
+                                .atTime(lesson.getStartTime()).isAfter(now))
+                        .findFirst();
+
+                if (nextLesson.isPresent()) return nextLesson;
+            }
+        }
+
+        return Optional.empty();
     }
 }

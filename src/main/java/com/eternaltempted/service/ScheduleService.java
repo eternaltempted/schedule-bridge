@@ -33,7 +33,7 @@ public class ScheduleService {
     public List<Lesson> getScheduleByWeekday(
             int week,
             DayOfWeek day) throws IOException {
-        log.info("Fetching schedule for {}", day);
+        log.info("Fetching schedule for day {}", day);
         return provider.getSchedule(week).getLessonsByWeekday(day);
     }
 
