@@ -5,23 +5,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Schedule {
 
     private final Map<LocalDate, List<Lesson>> lessons;
 
     public Schedule() {
-        this.lessons = new TreeMap<>(); // guarantees chronological order
+        this.lessons = new TreeMap<>();
     }
 
     public void addLesson(Lesson lesson) {
         Objects.requireNonNull(lesson, "Lesson cannot be null");
 
-        lessons.computeIfAbsent(lesson.getDate(), date ->
+        lessons.computeIfAbsent(lesson.date(), date ->
                 new ArrayList<>()
         ).add(lesson);
     }
@@ -40,17 +37,13 @@ public class Schedule {
     }
 
     @JsonIgnore
-    public Optional<Lesson> getNextLesson() {
-
-        LocalDate today = LocalDate.now();
-        LocalDateTime now = LocalDateTime.now();
-
+    public Optional<Lesson> getNextLesson(LocalDate today, LocalDateTime now) {
         for (Map.Entry<LocalDate, List<Lesson>> entry : lessons.entrySet()) {
 
             if (!entry.getKey().isBefore(today)) {
                 Optional<Lesson> nextLesson = entry.getValue()
-                        .stream().filter(lesson -> lesson.getDate()
-                                .atTime(lesson.getStartTime()).isAfter(now))
+                        .stream().filter(lesson -> lesson.date()
+                                .atTime(lesson.startTime()).isAfter(now))
                         .findFirst();
 
                 if (nextLesson.isPresent()) return nextLesson;

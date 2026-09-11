@@ -27,6 +27,7 @@ public class ScheduleProvider {
     @Cacheable("schedules")
     public Schedule getSchedule(int week) throws IOException {
         Document doc = scheduleFetcher.fetch(
+                properties.getURL(),
                 properties.getGroup(),
                 properties.getStudent(),
                 week

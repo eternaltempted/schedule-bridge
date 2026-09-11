@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -22,33 +24,33 @@ public class ScheduleController {
     }
 
     @GetMapping("/schedule")
-    public Object getLessons(
+    public ResponseEntity<Object> getLessons(
             @RequestParam("week") int week,
             @RequestParam(value = "day", required = false) DayOfWeek day
     ) throws IOException {
 
         if (day == null) {
-            return scheduleService.getWeekSchedule(week);
+            return ResponseEntity.ok(
+                    scheduleService.getWeekSchedule(week)
+            );
         }
 
-        return scheduleService.getScheduleByWeekday(week, day);
+        return ResponseEntity.ok(
+                scheduleService.getScheduleByWeekday(week, day)
+        );
     }
 
     @GetMapping("/schedule/today")
-    public List<Lesson> getLessonsToday() throws IOException {
-        LocalDate today = LocalDate.now();
-        int academicWeek = AcademicWeekCalculator.getAcademicWeek(today);
-
-        return scheduleService.getScheduleByWeekday(academicWeek, today.getDayOfWeek());
+    public ResponseEntity<List<Lesson>> getTodaySchedule() throws IOException {
+        return ResponseEntity.ok(
+                scheduleService.getTodaySchedule()
+        );
     }
 
     @GetMapping("/schedule/next")
     public ResponseEntity<Lesson> getNextLesson() throws IOException {
-        LocalDate today = LocalDate.now();
-        int academicWeek = AcademicWeekCalculator.getAcademicWeek(today);
-
         return ResponseEntity.of(
-                scheduleService.getNextLesson(academicWeek)
+                scheduleService.getNextLesson()
         );
     }
 

@@ -15,7 +15,7 @@
     </parent>
 
     <groupId>com.eternaltempted</groupId>
-    <artifactId>khneu-schedule-scraper</artifactId>
+    <artifactId>schedule-bridge</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>

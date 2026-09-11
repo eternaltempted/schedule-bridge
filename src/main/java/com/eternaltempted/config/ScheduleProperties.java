@@ -83,4 +83,16 @@ public class ScheduleProperties {
         return student;
     }
 
+    public String getURL() {
+        String URL = properties.getProperty("url");
+
+        if (URL == null || URL.isBlank()) {
+            throw new IllegalStateException(
+                    "Base URL is missing in configuration file: " + CONFIGURATION_FILE
+            );
+        }
+
+        return URL;
+    }
+
 }

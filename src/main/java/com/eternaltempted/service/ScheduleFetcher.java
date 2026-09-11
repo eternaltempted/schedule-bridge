@@ -14,11 +14,16 @@ public class ScheduleFetcher {
 
     private static final Logger log = LoggerFactory.getLogger(ScheduleFetcher.class);
 
-    private static final String BASE_URL = "http://rozklad.hneu.edu.ua/schedule/schedule";
     private static final int TIMEOUT_MS = 10_000;
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36";
 
-    public Document fetch(String group, String student, int week) throws IOException {
+    public Document fetch(String URL, String group, String student, int week) throws IOException {
+
+        if (URL == null || URL.isBlank()) {
+            throw new IllegalArgumentException(
+                    "URL cannot be null or empty"
+            );
+        }
 
         if (group == null || group.isBlank()) {
             throw new IllegalArgumentException(
@@ -39,11 +44,11 @@ public class ScheduleFetcher {
         }
 
         log.info(
-                "Fetching schedule by the request..."
+                "Attempting to fetch the schedule..."
         );
 
         try {
-            Document doc = Jsoup.connect(BASE_URL)
+            Document doc = Jsoup.connect(URL)
                     .data("group", group)
                     .data("week", String.valueOf(week))
                     .data("student", student)
@@ -68,7 +73,6 @@ public class ScheduleFetcher {
             );
             throw exception;
         }
-
     }
 
 }

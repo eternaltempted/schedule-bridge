@@ -5,15 +5,20 @@ import java.time.temporal.ChronoUnit;
 
 public class AcademicWeekCalculator {
 
-    private static final LocalDate ACADEMIC_YEAR_START =
-            LocalDate.of(2026, 8, 31);
-
     public static int getAcademicWeek(LocalDate date) {
         long weeksPassed = ChronoUnit.WEEKS.between(
-                ACADEMIC_YEAR_START,
+                getAcademicYearStart(date),
                 date
         );
 
         return (int) weeksPassed + 1;
+    }
+
+    public static LocalDate getAcademicYearStart(LocalDate now) {
+        LocalDate academicYearBoundary = LocalDate.of(now.getYear(), 9, 1);
+
+        return !now.isBefore(academicYearBoundary)
+                ? academicYearBoundary
+                : academicYearBoundary.minusYears(1);
     }
 }
