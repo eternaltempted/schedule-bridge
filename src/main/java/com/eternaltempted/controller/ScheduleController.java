@@ -2,16 +2,12 @@ package com.eternaltempted.controller;
 
 import com.eternaltempted.model.Lesson;
 import com.eternaltempted.service.ScheduleService;
-import com.eternaltempted.util.AcademicWeekCalculator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -53,5 +49,4 @@ public class ScheduleController {
                 scheduleService.getNextLesson()
         );
     }
-
 }

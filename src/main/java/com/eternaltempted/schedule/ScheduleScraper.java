@@ -1,4 +1,4 @@
-package com.eternaltempted.service;
+package com.eternaltempted.schedule;
 
 import com.eternaltempted.model.Lesson;
 import com.eternaltempted.model.Schedule;

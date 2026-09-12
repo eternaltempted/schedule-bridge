@@ -2,6 +2,7 @@ package com.eternaltempted.service;
 
 import com.eternaltempted.model.Lesson;
 import com.eternaltempted.model.Schedule;
+import com.eternaltempted.schedule.ScheduleProvider;
 import com.eternaltempted.util.AcademicWeekCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service

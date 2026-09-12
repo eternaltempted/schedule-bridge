@@ -23,8 +23,12 @@ public class Schedule {
         ).add(lesson);
     }
 
-    public Map<LocalDate, List<Lesson>> getLessons() {
-        return lessons;
+    // is currently used only for Google Calendar API implementation
+    public List<Lesson> getAllLessons() {
+        return lessons.values()
+                .stream()
+                .flatMap(List::stream)
+                .toList();
     }
 
     public List<Lesson> getLessonsByWeekday(DayOfWeek day) {

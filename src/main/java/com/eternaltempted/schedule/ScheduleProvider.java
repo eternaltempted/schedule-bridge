@@ -1,4 +1,4 @@
-package com.eternaltempted.service;
+package com.eternaltempted.schedule;
 
 import com.eternaltempted.config.ScheduleProperties;
 import com.eternaltempted.model.Schedule;

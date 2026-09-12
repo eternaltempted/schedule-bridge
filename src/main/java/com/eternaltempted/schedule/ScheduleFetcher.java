@@ -1,4 +1,4 @@
-package com.eternaltempted.service;
+package com.eternaltempted.schedule;
 
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
