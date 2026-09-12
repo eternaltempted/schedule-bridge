@@ -1,11 +1,10 @@
 package com.eternaltempted.controller;
 
+import com.eternaltempted.model.Schedule;
 import com.eternaltempted.service.GoogleCalendarService;
-import com.google.api.services.calendar.model.Event;
+import com.eternaltempted.service.ScheduleService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -14,16 +13,20 @@ import java.io.IOException;
 public class GoogleCalendarController {
 
     private final GoogleCalendarService googleCalendarService;
+    private final ScheduleService scheduleService;
 
-    public GoogleCalendarController(GoogleCalendarService googleCalendarService) {
+    public GoogleCalendarController(GoogleCalendarService googleCalendarService, ScheduleService scheduleService) {
         this.googleCalendarService = googleCalendarService;
+        this.scheduleService = scheduleService;
     }
 
-    // testing API endpoint to post the event and get its id as the HTTP response
-    @PostMapping("/test-event")
-    public ResponseEntity<String> createTestEvent() throws IOException {
-        Event event = googleCalendarService.createTestEvent();
-        return ResponseEntity.ok(event.getId());
+    @PostMapping("/sync")
+    public ResponseEntity<Void> syncSchedule(
+            @RequestParam("week") int week
+    ) throws IOException {
+        Schedule schedule = scheduleService.getWeekSchedule(week);
+        googleCalendarService.syncSchedule(schedule);
+        return ResponseEntity.ok().build();
     }
 
 }
