@@ -9,7 +9,7 @@ import java.time.Clock;
  * Configures time-related dependencies used by the application.
  */
 @Configuration
-public class TimeConfiguration {
+public class TimeConfig {
 
     /**
      * Provides the application's system clock.

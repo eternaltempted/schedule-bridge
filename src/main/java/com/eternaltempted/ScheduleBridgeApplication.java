@@ -4,11 +4,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class KhneuScheduleBridgeApplication {
+public class ScheduleBridgeApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(
-                KhneuScheduleBridgeApplication.class,
+                ScheduleBridgeApplication.class,
                 args
         );
     }

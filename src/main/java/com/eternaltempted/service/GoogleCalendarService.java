@@ -1,7 +1,9 @@
 package com.eternaltempted.service;
 
+import com.eternaltempted.model.CalendarEventMapping;
 import com.eternaltempted.model.Lesson;
 import com.eternaltempted.model.Schedule;
+import com.eternaltempted.repository.LessonRepository;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
@@ -18,21 +20,35 @@ import java.util.Arrays;
 public class GoogleCalendarService {
 
     private static final ZoneId SOURCE_ZONE = ZoneId.of("Europe/Kyiv");
-    private static final ZoneId TARGET_ZONE = ZoneId.of("Europe/Berlin");
+    private static final ZoneId TARGET_ZONE = ZoneId.of("Europe/Paris");
 
     private final Calendar calendar;
+    private final LessonRepository repository;
 
-    public GoogleCalendarService(Calendar calendar) {
+    public GoogleCalendarService(Calendar calendar, LessonRepository repository) {
         this.calendar = calendar;
+        this.repository = repository;
     }
 
     public void syncSchedule(Schedule schedule) throws IOException {
         for (Lesson lesson : schedule.getAllLessons()) {
-            Event event = convertLessonToEvent(lesson);
+            CalendarEventMapping mapping = repository.findLessonByDateAndLessonNumber(
+                    lesson.date(), lesson.lessonNumber()
+            );
 
-            calendar.events()
-                    .insert("primary", event)
-                    .execute();
+            if (mapping == null) {
+                Event event = calendar.events()
+                        .insert("primary", convertLessonToEvent(lesson))
+                        .execute();
+
+                repository.insert(
+                        new CalendarEventMapping(
+                                lesson.date(),
+                                lesson.lessonNumber(),
+                                event.getId()
+                        )
+                );
+            }
         }
     }
 
@@ -49,16 +65,12 @@ public class GoogleCalendarService {
     }
 
     private EventDateTime convertDateAndTime(LocalDateTime localDateTime) {
-        ZonedDateTime berlinDateTime = localDateTime
+        ZonedDateTime ect = localDateTime
                 .atZone(SOURCE_ZONE)
                 .withZoneSameInstant(TARGET_ZONE);
 
         return new EventDateTime()
-                .setDateTime(
-                        new DateTime(
-                                berlinDateTime.toInstant().toEpochMilli()
-                        )
-                )
+                .setDateTime(new DateTime(ect.toInstant().toEpochMilli()))
                 .setTimeZone(TARGET_ZONE.getId());
     }
 

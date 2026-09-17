@@ -36,6 +36,26 @@
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
 
+        <!-- Monitoring -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- MongoDB -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-bom</artifactId>
+            <version>5.11.1</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+
         <!-- Caffeine -->
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
@@ -49,7 +69,6 @@
             <version>1.23.2</version>
         </dependency>
 
-        <!-- Testing -->
         <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
