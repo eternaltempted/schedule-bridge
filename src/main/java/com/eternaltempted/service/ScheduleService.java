@@ -61,11 +61,17 @@ public class ScheduleService {
     public Optional<Lesson> getNextLesson() throws IOException {
         log.info("Fetching schedule to get the next lesson...");
 
-        LocalDate today = LocalDate.now(clock);
         LocalDateTime now = LocalDateTime.now(clock);
-        int week = AcademicWeekCalculator.getAcademicWeek(today);
+        int week = AcademicWeekCalculator.getAcademicWeek(now.toLocalDate());
 
-        return provider.getSchedule(week)
-                .getNextLesson(today, now);
+        Optional<Lesson> lesson = provider.getSchedule(week)
+                .getNextLesson(now);
+
+        if (lesson.isEmpty()) {
+            return provider.getSchedule(week + 1)
+                    .getNextLesson(now);
+        }
+
+        return lesson;
     }
 }

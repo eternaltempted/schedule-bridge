@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
 public class Schedule {
@@ -47,19 +48,11 @@ public class Schedule {
     }
 
     @JsonIgnore
-    public Optional<Lesson> getNextLesson(LocalDate today, LocalDateTime now) {
-        for (Map.Entry<LocalDate, List<Lesson>> entry : lessons.entrySet()) {
-
-            if (!entry.getKey().isBefore(today)) {
-                Optional<Lesson> nextLesson = entry.getValue()
-                        .stream().filter(lesson -> lesson.date()
-                                .atTime(lesson.startTime()).isAfter(now))
-                        .findFirst();
-
-                if (nextLesson.isPresent()) return nextLesson;
-            }
-        }
-
-        return Optional.empty();
+    public Optional<Lesson> getNextLesson(LocalDateTime now) {
+        return lessons.values()
+                .stream()
+                .flatMap(List::stream)
+                .filter(lesson -> lesson.date().atTime(lesson.startTime()).isAfter(now))
+                .findFirst();
     }
 }
