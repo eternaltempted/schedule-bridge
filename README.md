@@ -26,6 +26,7 @@ It later became a practical backend project for learning:
 - unit and controller testing
 - date and time handling
 - HTML parsing with jsoup
+- Google Calendar API integration
 
 ## Features
 
@@ -41,6 +42,12 @@ The application exposes a small REST API for accessing schedule data.
   <source media="(prefers-color-scheme: dark)" srcset="assets/img/api-endpoints-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="assets/img/api-endpoints-light.png">
   <img alt="API Endpoints" src="assets/img/api-endpoints-light.png">
+</picture>
+The application also supports a Google Calendar API for creating/modifying the events inside the calendar.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/img/google-calendar-api-endpoints-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="assets/img/google-calendar-api-endpoints-light.png">
+  <img alt="API Endpoints" src="assets/img/google-calendar-api-endpoints-light.png">
 </picture>
 
 An individual lesson is represented approximately as:
@@ -61,10 +68,7 @@ An individual lesson is represented approximately as:
 
 The project is built with **Java 21, Spring Boot and Maven**. It also uses
 **jsoup** for HTML parsing, **JUnit and Mockito** for testing, and **Caffeine**
-for caching.
-
-Google Calendar integration is also being explored as the final major feature
-of the project.
+for caching. **Google Calendar API** for creating calendar events of the classes.
 
 ## Architecture
 
