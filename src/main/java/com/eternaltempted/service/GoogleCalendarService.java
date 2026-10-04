@@ -20,6 +20,7 @@ import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GoogleCalendarService {
@@ -60,7 +61,11 @@ public class GoogleCalendarService {
             }
         }
 
-        for (CalendarEventMapping mapping : repository.findAll()) {
+        List<CalendarEventMapping> mappings = repository.findAll();
+
+        if (mappings.isEmpty()) return;
+
+        for (CalendarEventMapping mapping : mappings) {
             try {
                 Event event = calendar.events()
                         .get(CALENDAR_ID, mapping.getEventId())
@@ -81,13 +86,14 @@ public class GoogleCalendarService {
     }
 
     private void recreateEvent(CalendarEventMapping mapping, Schedule schedule) throws IOException {
-        Lesson lesson = schedule.getLessonByDateAndNumber(
+        Optional<Lesson> lesson = schedule.getLessonByDateAndNumber(
                 mapping.getDate(), mapping.getLessonNumber()
         );
 
-        if (lesson != null) {
+        if (lesson.isPresent()) {
+            Lesson existingLesson = lesson.get();
             Event event = calendar.events()
-                    .insert(CALENDAR_ID, convertLessonToEvent(lesson))
+                    .insert(CALENDAR_ID, convertLessonToEvent(existingLesson))
                     .execute();
 
             mapping.setEventId(event.getId());
