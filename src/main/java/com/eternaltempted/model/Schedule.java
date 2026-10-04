@@ -23,6 +23,13 @@ public class Schedule {
         ).add(lesson);
     }
 
+    public Lesson getLessonByDateAndNumber(LocalDate date, int lessonNumber) {
+        return lessons.get(date).stream()
+                .filter(lesson -> lesson.lessonNumber() == lessonNumber)
+                .findFirst()
+                .orElse(null);
+    }
+
     // is currently used only for Google Calendar API implementation
     public List<Lesson> getAllLessons() {
         return lessons.values()

@@ -4,23 +4,29 @@ import com.eternaltempted.model.CalendarEventMapping;
 import com.eternaltempted.model.Lesson;
 import com.eternaltempted.model.Schedule;
 import com.eternaltempted.repository.LessonRepository;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
 
+import com.google.api.services.calendar.model.Events;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.*;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class GoogleCalendarService {
 
     private static final ZoneId SOURCE_ZONE = ZoneId.of("Europe/Kyiv");
     private static final ZoneId TARGET_ZONE = ZoneId.of("Europe/Paris");
+    private static final String CALENDAR_ID = "primary";
 
     private final Calendar calendar;
     private final LessonRepository repository;
@@ -31,14 +37,17 @@ public class GoogleCalendarService {
     }
 
     public void syncSchedule(Schedule schedule) throws IOException {
+
         for (Lesson lesson : schedule.getAllLessons()) {
+
             CalendarEventMapping mapping = repository.findLessonByDateAndLessonNumber(
-                    lesson.date(), lesson.lessonNumber()
+                    lesson.date(),
+                    lesson.lessonNumber()
             );
 
             if (mapping == null) {
                 Event event = calendar.events()
-                        .insert("primary", convertLessonToEvent(lesson))
+                        .insert(CALENDAR_ID, convertLessonToEvent(lesson))
                         .execute();
 
                 repository.insert(
@@ -50,6 +59,43 @@ public class GoogleCalendarService {
                 );
             }
         }
+
+        for (CalendarEventMapping mapping : repository.findAll()) {
+            try {
+                Event event = calendar.events()
+                        .get(CALENDAR_ID, mapping.getEventId())
+                        .execute();
+
+                if ("cancelled".equals(event.getStatus())) {
+                    recreateEvent(mapping, schedule);
+                }
+
+            } catch (GoogleJsonResponseException e) {
+                if (e.getStatusCode() == 404) {
+                    recreateEvent(mapping, schedule);
+                } else {
+                    throw e;
+                }
+            }
+        }
+    }
+
+    private void recreateEvent(CalendarEventMapping mapping, Schedule schedule) throws IOException {
+        Lesson lesson = schedule.getLessonByDateAndNumber(
+                mapping.getDate(), mapping.getLessonNumber()
+        );
+
+        if (lesson != null) {
+            Event event = calendar.events()
+                    .insert(CALENDAR_ID, convertLessonToEvent(lesson))
+                    .execute();
+
+            mapping.setEventId(event.getId());
+            repository.save(mapping);
+            return;
+        }
+
+        repository.delete(mapping);
     }
 
     private Event convertLessonToEvent(Lesson lesson) {
