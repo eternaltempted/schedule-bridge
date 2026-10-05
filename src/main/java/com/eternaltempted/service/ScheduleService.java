@@ -44,18 +44,18 @@ public class ScheduleService {
     }
 
     public List<Lesson> getTodaySchedule() throws IOException {
-        LocalDate today = LocalDate.now(clock);
-        int week = AcademicWeekCalculator.getAcademicWeek(today);
 
-        log.info("Fetching schedule for today ({}, {})",
-                today,
-                today.getDayOfWeek()
+        LocalDate now = LocalDate.now(clock);
+        int week = AcademicWeekCalculator.getAcademicWeek(now);
+
+        log.info("Fetching schedule for today (date={}, dayOfWeek={}, week={})",
+                now,
+                now.getDayOfWeek(),
+                week
         );
 
         return provider.getSchedule(week)
-                .getLessonsByWeekday(
-                        today.getDayOfWeek()
-                );
+                .getLessonsByWeekday(now.getDayOfWeek());
     }
 
     public Optional<Lesson> getNextLesson() throws IOException {

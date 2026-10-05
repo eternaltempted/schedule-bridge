@@ -1,24 +1,33 @@
 package com.eternaltempted.util;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 
 public class AcademicWeekCalculator {
 
     public static int getAcademicWeek(LocalDate date) {
+
+        LocalDate start = getAcademicYearStart(date);
+
         long weeksPassed = ChronoUnit.WEEKS.between(
-                getAcademicYearStart(date),
+                start,
                 date
         );
 
-        return (int) weeksPassed + 1;
+        return Math.toIntExact(weeksPassed) + 1;
     }
 
-    public static LocalDate getAcademicYearStart(LocalDate now) {
-        LocalDate academicYearBoundary = LocalDate.of(now.getYear(), 9, 1);
+    public static LocalDate getAcademicYearStart(LocalDate date) {
+        LocalDate academicYearBoundary = LocalDate.of(date.getYear(), 9, 1);
 
-        return !now.isBefore(academicYearBoundary)
-                ? academicYearBoundary
-                : academicYearBoundary.minusYears(1);
+        if (date.isBefore(academicYearBoundary)) {
+            academicYearBoundary = academicYearBoundary.minusYears(1);
+        }
+
+        return academicYearBoundary.with(
+                TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)
+        );
     }
 }
