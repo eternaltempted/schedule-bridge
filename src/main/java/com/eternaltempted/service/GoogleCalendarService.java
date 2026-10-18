@@ -11,13 +11,10 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
 
-import com.google.api.services.calendar.model.Events;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.*;
-import java.time.temporal.TemporalAdjuster;
-import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +33,7 @@ public class GoogleCalendarService {
         this.calendar = calendar;
         this.repository = repository;
     }
+
 
     public void syncSchedule(Schedule schedule) throws IOException {
 

@@ -24,8 +24,16 @@ public class GoogleCalendarController {
 
     @PostMapping("/sync")
     public ResponseEntity<Void> syncSchedule(
-            @RequestParam("week") int week
+            @RequestParam(value = "week", required = false) Integer week
     ) throws IOException {
+
+        if (week == null) {
+            LocalDate now = LocalDate.now();
+            Schedule schedule = scheduleService.getWeekSchedule(AcademicWeekCalculator.getAcademicWeek(now));
+            googleCalendarService.syncSchedule(schedule);
+            return ResponseEntity.ok().build();
+        }
+
         Schedule schedule = scheduleService.getWeekSchedule(week);
         googleCalendarService.syncSchedule(schedule);
         return ResponseEntity.ok().build();
