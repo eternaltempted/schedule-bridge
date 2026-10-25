@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="description" content="Schedule Bridge helps synchronize a university timetable with Google Calendar.">
+  <title>Schedule Bridge</title>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100">
+  <main class="mx-auto flex min-h-screen max-w-3xl items-center px-6 py-16">
+    <section class="w-full rounded-3xl border border-slate-800 bg-slate-900 p-8 shadow-2xl sm:p-12">
+      <div class="flex items-center justify-between gap-4">
+        <p class="inline-flex rounded-full bg-blue-400/10 px-3 py-1 text-sm text-blue-300" data-en="Personal project" data-uk="Особистий проєкт">Personal project</p>
+        <div class="flex gap-2 text-sm">
+          <button type="button" class="rounded-lg px-3 py-1 text-blue-300 hover:bg-slate-800" onclick="setLanguage('en')">EN</button>
+          <button type="button" class="rounded-lg px-3 py-1 text-blue-300 hover:bg-slate-800" onclick="setLanguage('uk')">UA</button>
+        </div>
+      </div>
+      <div class="mt-6 flex items-center gap-4">
+        <img src="favicon.svg" alt="" class="h-14 w-14">
+        <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">Schedule Bridge</h1>
+      </div>
+      <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-300"
+         data-en="Schedule Bridge is a personal application designed to synchronize a university timetable with Google Calendar."
+         data-uk="Schedule Bridge — це особистий застосунок для синхронізації розкладу університетських занять із Google Calendar.">Schedule Bridge is a personal application designed to synchronize a university timetable with Google Calendar.</p>
+      <p class="mt-4 leading-7 text-slate-400"
+         data-en="The application may process timetable information and Google Calendar data needed to create or update schedule events. It is intended for personal use and is not affiliated with Google or any university."
+         data-uk="Застосунок може обробляти дані розкладу та дані Google Calendar, необхідні для створення або оновлення подій. Він призначений для особистого використання й не пов’язаний із Google або будь-яким університетом.">The application may process timetable information and Google Calendar data needed to create or update schedule events. It is intended for personal use and is not affiliated with Google or any university.</p>
+      <nav class="mt-10 flex flex-wrap gap-5 border-t border-slate-800 pt-6 text-sm">
+        <a class="text-blue-300 underline underline-offset-4 hover:text-blue-200" href="privacy.html" data-en="Privacy Policy" data-uk="Політика конфіденційності">Privacy Policy</a>
+        <a class="text-blue-300 underline underline-offset-4 hover:text-blue-200" href="terms.html" data-en="Terms of Service" data-uk="Умови використання">Terms of Service</a>
+      </nav>
+      <p class="mt-8 text-xs leading-5 text-slate-500"
+         data-en="Contact: dev@bridgepost.uk"
+         data-uk="Контакт: dev@bridgepost.uk">Contact: dev@bridgepost.uk</p>
+    </section>
+  </main>
+  <script>
+    function setLanguage(lang) {
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-en][data-uk]').forEach(el => {
+        el.textContent = el.dataset[lang];
+      });
+      try { localStorage.setItem('sb-language', lang); } catch (e) {}
+    }
+    let saved = 'en';
+    try { saved = localStorage.getItem('sb-language') || 'en'; } catch (e) {}
+    setLanguage(saved);
+  </script>
+</body>
+</html>
