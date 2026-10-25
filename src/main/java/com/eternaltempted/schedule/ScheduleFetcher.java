@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.http.HttpConnectTimeoutException;
 
 @Component
 public class ScheduleFetcher {
@@ -39,13 +40,11 @@ public class ScheduleFetcher {
 
         if (week < 1 || week > 52) {
             throw new IllegalArgumentException(
-                    "The week should be between 1 and 52, got: " + week
+                    "The week must be between 1 and 52, got: %d".formatted(week)
             );
         }
 
-        log.info(
-                "Attempting to fetch the schedule..."
-        );
+        log.info("Requesting schedule data...");
 
         try {
             Document doc = Jsoup.connect(URL)
@@ -57,19 +56,28 @@ public class ScheduleFetcher {
                     .get();
 
             log.debug("Successfully fetched schedule HTML document.");
+
             return doc;
         } catch (HttpStatusException exception) {
             log.error(
                     "HTTP error {} while fetching schedule for week={}",
-                    exception.getStatusCode(), week
+                    exception.getStatusCode(), week, exception
             );
             throw new IOException(
-                    "Could not fetch data, HTTP status: " + exception.getStatusCode(),
+                    "Could not fetch data for week=" + week
+                            + ", HTTP status=" + exception.getStatusCode(),
                     exception
             );
+        } catch (HttpConnectTimeoutException exception) {
+            log.warn(
+                    "Connection timed out while fetching schedule for week={}",
+                    week, exception
+            );
+            throw exception;
         } catch (IOException exception) {
             log.error(
-                    "Network failure connecting to the schedule portal."
+                    "I/O failure while fetching schedule for week={}",
+                    week, exception
             );
             throw exception;
         }
