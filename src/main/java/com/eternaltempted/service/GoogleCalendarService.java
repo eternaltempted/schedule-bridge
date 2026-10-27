@@ -25,6 +25,8 @@ public class GoogleCalendarService {
     private static final ZoneId SOURCE_ZONE = ZoneId.of("Europe/Kyiv");
     private static final ZoneId TARGET_ZONE = ZoneId.of("Europe/Paris");
     private static final String CALENDAR_ID = "primary";
+    private static final int FIRST_REMINDER_MIN = 30;
+    private static final int SECOND_REMINDER_MIN = 15;
 
     private final Calendar calendar;
     private final LessonRepository repository;
@@ -33,7 +35,6 @@ public class GoogleCalendarService {
         this.calendar = calendar;
         this.repository = repository;
     }
-
 
     public void syncSchedule(Schedule schedule) throws IOException {
 
@@ -130,8 +131,8 @@ public class GoogleCalendarService {
 
     private Event.Reminders getReminders() {
         EventReminder[] reminders = new EventReminder[] {
-                new EventReminder().setMethod("popup").setMinutes(30),
-                new EventReminder().setMethod("popup").setMinutes(15)
+                new EventReminder().setMethod("popup").setMinutes(FIRST_REMINDER_MIN),
+                new EventReminder().setMethod("popup").setMinutes(SECOND_REMINDER_MIN)
         };
 
         return new Event.Reminders()
