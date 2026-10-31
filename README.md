@@ -5,12 +5,11 @@ A Java/Spring Boot application for working with university schedule data through
 > [!WARNING]
 > ## Project Status: Archived
 >
-> This project was created as a personal learning project.
+> This project was originally developed to retrieve university timetable data from the official Kharkiv National University of Economics schedule website.
 >
-> Development of the original schedule data-acquisition was discontinued after the source developers confirmed that automated web scraping is strictly prohibited and that no public API is available.
+> The original data acquisition component was discontinued after communication with the source website's administrators regarding automated access restrictions and the absence of a public API.
 >
-> The repository is preserved for educational and portfolio purposes.
-> Do not use the scraping component against the original source.
+>The project is preserved for educational and portfolio purposes. It is not affiliated with or endorsed by the university.
 
 ## About
 
@@ -68,7 +67,8 @@ An individual lesson is represented approximately as:
 
 The project is built with **Java 21, Spring Boot and Maven**. It also uses
 **jsoup** for HTML parsing, **JUnit and Mockito** for testing, and **Caffeine**
-for caching. **Google Calendar API** for creating calendar events of the classes.
+for caching. **Google Calendar API** is primarily used for creating calendar events of the classes.
+**MongoDB** preserves already fetched schedule from the original source to prevent duplicates and manage existing classes.
 
 ## Architecture
 
