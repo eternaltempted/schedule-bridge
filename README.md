@@ -23,13 +23,17 @@
 </div>
 
 > [!WARNING]
-> ## Project Status: Archived
+> ## Data Source Notice
 >
-> This project was originally developed to retrieve university timetable data from the official Kharkiv National University of Economics schedule website.
+> This project retrieves timetable data from the official Kharkiv
+> National University of Economics schedule website.
 >
-> The original data acquisition component was discontinued after communication with the source website's administrators regarding automated access restrictions and the absence of a public API.
+> The website's `robots.txt` file disallows automated crawling
+> for general user agents. Please respect the source website's
+> access policies.
 >
->The project is preserved for educational and portfolio purposes. It is not affiliated with or endorsed by the university.
+> This is an independent project and is not affiliated with
+> or endorsed by the university.
 
 ## About
 
@@ -49,27 +53,55 @@ It later became a practical backend project for learning:
 
 ## Features
 
-The API can retrieve a schedule for an academic week, return today's lessons, and determine the next upcoming lesson. Schedule data is represented using a small domain model built around `Schedule` and `Lesson`.
+The API can retrieve a schedule for an academic week, return today's lessons, synchronise the calendar with the next academic week, and return the next upcoming lesson.
 
-The application also separates HTTP communication, business logic, and schedule acquisition into controller, service, and provider layers.
+Schedule data is represented by the `Schedule` and `Lesson` models,
+which are used by the schedule endpoints.
 
-## API
+The `LessonDTO` model defines the structure of lesson documents
+stored in MongoDB and used by the calendar integration.
 
-The application exposes a small REST API for accessing schedule data.
+The application also separates HTTP communication, business logic, 
+and schedule acquisition into controller, service, and provider layers.
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/img/api-endpoints-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="assets/img/api-endpoints-light.png">
-  <img alt="API Endpoints" src="assets/img/api-endpoints-light.png">
-</picture>
-The application also supports a Google Calendar API for creating/modifying the events inside the calendar.
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/img/google-calendar-api-endpoints-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="assets/img/google-calendar-api-endpoints-light.png">
-  <img alt="API Endpoints" src="assets/img/google-calendar-api-endpoints-light.png">
-</picture>
+## API Usage
 
-An individual lesson is represented approximately as:
+Schedule Bridge exposes a REST API for retrieving university schedules and synchronising lessons with Google Calendar.
+
+### Retrieve Schedule
+
+Retrieve university schedule data in JSON format using different endpoints and query parameters.
+
+```bash
+# Get lessons for a specific week
+curl -X GET "http://localhost:8080/api/schedule?week=10"
+
+# Filter lessons by week and day
+curl -X GET "http://localhost:8080/api/schedule?week=10&day=MONDAY"
+
+# Get today's schedule
+curl -X GET "http://localhost:8080/api/schedule/today"
+
+# Get the upcoming lesson
+curl -X GET "http://localhost:8080/api/schedule/next"
+```
+
+### Synchronise with Google Calendar
+
+Send a POST request to synchronise your schedule with Google Calendar. You can synchronise a specific week, the upcoming week, or the default schedule.
+
+```bash
+# Synchronize the default schedule
+curl -X POST "http://localhost:8080/api/calendar/sync"
+
+# Synchronize a specific week
+curl -X POST "http://localhost:8080/api/calendar/sync?week=10"
+
+# Synchronize the upcoming week
+curl -X POST "http://localhost:8080/api/calendar/sync/next"
+```
+
+An individual lesson is represented by the following JSON structure:
 
 ```json
 {
@@ -87,12 +119,17 @@ An individual lesson is represented approximately as:
 
 The project is built with **Java 21, Spring Boot and Maven**. It also uses
 **jsoup** for HTML parsing, **JUnit and Mockito** for testing, and **Caffeine**
-for caching. **Google Calendar API** is primarily used for creating calendar events of the classes.
-**MongoDB** preserves already fetched schedule from the original source to prevent duplicates and manage existing classes.
+for caching. 
+
+**Google Calendar API** is used to create and manage calendar events
+for university classes.
+
+**MongoDB** stores previously retrieved schedule data to prevent
+duplicate entries and manage existing classes.
 
 ## Architecture
 
-The application is organized into distinct layers, each responsible for a specific part of the system.
+The application is organised into distinct layers, each responsible for a specific part of the system.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/img/architecture-dark.png">
