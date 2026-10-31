@@ -1,6 +1,6 @@
 package com.eternaltempted.service;
 
-import com.eternaltempted.model.CalendarEventMapping;
+import com.eternaltempted.model.LessonDTO;
 import com.eternaltempted.model.Lesson;
 import com.eternaltempted.model.Schedule;
 import com.eternaltempted.repository.LessonRepository;
@@ -40,7 +40,7 @@ public class GoogleCalendarService {
 
         for (Lesson lesson : schedule.getAllLessons()) {
 
-            CalendarEventMapping mapping = repository.findLessonByDateAndLessonNumber(
+            LessonDTO mapping = repository.findLessonByDateAndLessonNumber(
                     lesson.date(),
                     lesson.lessonNumber()
             );
@@ -51,7 +51,7 @@ public class GoogleCalendarService {
                         .execute();
 
                 repository.insert(
-                        new CalendarEventMapping(
+                        new LessonDTO(
                                 lesson.date(),
                                 lesson.lessonNumber(),
                                 event.getId()
@@ -60,11 +60,11 @@ public class GoogleCalendarService {
             }
         }
 
-        List<CalendarEventMapping> mappings = repository.findAll();
+        List<LessonDTO> mappings = repository.findAll();
 
         if (mappings.isEmpty()) return;
 
-        for (CalendarEventMapping mapping : mappings) {
+        for (LessonDTO mapping : mappings) {
             try {
                 Event event = calendar.events()
                         .get(CALENDAR_ID, mapping.getEventId())
@@ -84,7 +84,7 @@ public class GoogleCalendarService {
         }
     }
 
-    private void recreateEvent(CalendarEventMapping mapping, Schedule schedule) throws IOException {
+    private void recreateEvent(LessonDTO mapping, Schedule schedule) throws IOException {
         Optional<Lesson> lesson = schedule.getLessonByDateAndNumber(
                 mapping.getDate(), mapping.getLessonNumber()
         );

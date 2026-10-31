@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDate;
 
 @Document("calendar_events")
-public class CalendarEventMapping {
+public class LessonDTO {
 
     @Id
     private String id;
@@ -16,9 +16,9 @@ public class CalendarEventMapping {
 
     private String eventId;
 
-    public CalendarEventMapping(LocalDate date,
-                                int lessonNumber,
-                                String eventId) {
+    public LessonDTO(LocalDate date,
+                     int lessonNumber,
+                     String eventId) {
         this.date = date;
         this.lessonNumber = lessonNumber;
         this.eventId = eventId;
