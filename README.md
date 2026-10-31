@@ -1,6 +1,26 @@
+<div align="center">
+
 # Schedule Bridge API
 
-A Java/Spring Boot application for working with university schedule data through a REST API and integrating lessons with external services such as Google Calendar.
+**Bridging University Schedules with Your Calendar.**
+
+<a href="README.md">English</a> |
+<a href="README_UK.md">Українська</a> |
+<a href="https://eternaltempted.github.io/schedule-bridge/">Website</a>
+
+<p>
+  A Java / Spring Boot application for working with university
+  schedule data through a REST API and integrating lessons
+  with external services such as Google Calendar.
+</p>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/img/calendar-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="assets/img/calendar-light.png">
+  <img alt="Schedule Bridge calendar preview" src="assets/img/calendar-light.png" width="90%">
+</picture>
+
+</div>
 
 > [!WARNING]
 > ## Project Status: Archived
@@ -72,7 +92,7 @@ for caching. **Google Calendar API** is primarily used for creating calendar eve
 
 ## Architecture
 
-The project follows a simple layered structure:
+The application is organized into distinct layers, each responsible for a specific part of the system.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/img/architecture-dark.png">
